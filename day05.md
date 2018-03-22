@@ -489,18 +489,211 @@ stu_id int primary key auto_increment
 stu_name varchar
 class_id int
 tel char(11)
-mail 
+mail varchar
 ```
+
+![](./student_table.png)
 
 ```
 //my_class表
-class_id
-class_name
-major
-tutor
-start_time
+class_id int primary key auto_increment
+class_name vaarchar
+major varchar
+tutor varchar
+start_time date
+```
+
+![](./my_class.png)
+
+### 第五步、填充假数据
+
+```sql
+-- ----------------------------
+-- Records of my_class
+-- ----------------------------
+INSERT INTO `my_class` VALUES ('1', '北京前端1', '前端与移动开发', '赵老师', '2018-04-01');
+INSERT INTO `my_class` VALUES ('2', '北京前端2', '前端与移动开发', '李老师', '2018-03-01');
+INSERT INTO `my_class` VALUES ('3', '南京java', 'java', '王老师', '2018-03-02');
+INSERT INTO `my_class` VALUES ('4', '武汉PHP', 'PHP', '马老师', '2018-02-27');
+```
+
+```sql
+INSERT INTO `my_student` VALUES ('1', '成同学', '1', '13812345678', 'wefwe@qq.com');
+INSERT INTO `my_student` VALUES ('2', '李同学', '2', '13812345678', 'wefw@qq.com');
+INSERT INTO `my_student` VALUES ('3', '马同学', '3', '12412345678', 'wfewf@qq.com');
+INSERT INTO `my_student` VALUES ('4', '李同学', '3', '234232332', 'wefwefwe@qq.com');
+```
+
+### 第六步、根据用户传入的POST数据构建SQL语句
+
+```php
+<?php 
+header('content-type:text/html;charset=utf8');
+// print_r($_POST);
+$name = $_POST['name'];
+$class_id = $_POST['class_id'];
+$tel = $_POST['tel'];
+$mail = $_POST['mail'];
+
+$sql ="insert into my_student values (null,'$name',$class_id,'$tel','$mail')";
+die($sql);
+?>
+```
+
+### 第七步、用户名、手机不能为空
+
+```php
+<?php 
+header('content-type:text/html;charset=utf8');
+// print_r($_POST);
+$name = $_POST['name'];
+$class_id = $_POST['class_id'];
+$tel = $_POST['tel'];
+$mail = $_POST['mail'];
+if(empty($name) || empty($mail)){
+    header('refresh:3;url=./5-student-add.php');
+   echo "<script>alert('姓名以及手机号不能为空')</script>";
+   die();
+}
+$sql ="insert into my_student values (null,'$name',$class_id,'$tel','$mail')";
+die($sql);
+?>
 ```
 
 
-![](./设计学生信息表.png)
+## 文件上传
+
+### 前端页面设置
+- enctype
+- method="POST"
+
+### 文件上传接收
+- $_FILES
+- 文件类型(mime http://www.w3school.com.cn/media/media_mimeref.asp)
+
+```php
+$_FILES["file"]["name"] - 被上传文件的名称
+$_FILES["file"]["type"] - 被上传文件的类型
+//1G = 1024M
+//1M = 1024 kb
+//1kb = 1024 byte
+// 1byte = 8bit
+//两个字节相当于一个汉字
+//16bit = 1个汉字
+$_FILES["file"]["size"] - 被上传文件的大小，以字节计   
+$_FILES["file"]["tmp_name"] - 存储在服务器的文件的临时副本的名称
+$_FILES["file"]["error"] - 由文件上传导致的错误代码
+```
+
+```
+错误代码：
+值：0; 没有错误发生，文件上传成功。 
+值：1; 上传的文件超过了 php.ini 中 upload_max_filesize 选项限制的值。(默认是2M) 
+值：2; 上传文件的大小超过了 HTML 表单中 MAX_FILE_SIZE 选项指定的值。 
+值：3; 文件只有部分被上传。 
+值：4; 没有文件被上传。 
+值：5; 上传文件大小为0. 
+```
+
+可以通过在form表单中设置<input type="hidden" name="MAX_FILE_SIZE" value="1000">来限定上传的数据大小极限
+
+### 文件上传完整步骤
+1. 设计表单
+    + enctype值为multipart/form-data
+    + method为POST
+2. 接收数据$_FILES
+3. 通过$_FILES['myFileName']['error']判断出错信息
+4. 判断文件是否是HTTP POST上传的文件
+    + is_uploaded_file(临时文件路径$_FILES['myFileName']['tmp_name'])
+    + 返回true(合法的POST文件)
+5. 把文件从tmp临时目录中移动到网站永久路径
+    + move_uploaded_file(临时路径$_FILES['myFileName']['tmp_name']永久路径)
+
+
+### 文件上传实例
+
+```php
+// ① 判断上传是否发生严重错误
+if(empty($_FILES)){
+	die('上传发生严重错误');
+}
+
+print_r($_FILES['upload']);
+// Array
+// (
+//     [name] => 404.png
+//     [type] => image/png
+//     [tmp_name] => C:\Users\julien\AppData\Local\Temp\phpB3BE.tmp
+//     [error] => 0
+//     [size] => 11504
+// )
+$file =$_FILES['upload'];
+
+// ②判断错误
+if($file['error'] != 0){
+	$errorMsg ='';
+
+	switch($file['error']){
+		case 1:
+			$errorMsg ='超过2M';
+			break;
+		case 4:
+			$errorMsg ='未选择文件';
+			break;
+		case 6:
+			$errorMsg ='临时路径出错';
+			break;
+		default :
+			$errorMsg ='未知错误';
+	}
+
+	die("<h4>".$errorMsg."</h4>");
+
+}
+
+// ③判断是否是合法HTTP POST上传文件
+if(!is_uploaded_file($file['tmp_name'])){
+	die('非法上传文件');
+}
+// 判断文件大小是否满足要求 1.1M
+$maxSize =1.1;
+if($maxSize * 1024 * 1024 <  $file['size']){
+	die('文件大小超过'.$maxSize.'M');
+}
+
+// 判断文件类型是否是支持的类型
+// 1、打开finfo资源
+$resource  =finfo_open(FILEINFO_MIME_TYPE);
+// var_dump($resouce);die;
+ // resource(2) of type (file_info) 
+ 
+$mime =finfo_file($resource,$file['tmp_name']);
+var_dump($mime);die;
+// "image/jpeg" 
+
+// 网站支持的MIME类型
+$mimeArr =['image/png','image/jpeg'];
+if(!in_array($mime, $mimeArr)){
+	die('文件类型不支持');
+}
+
+// ④移动临时文件到永久路径
+// 永久路径：./upload/a.png
+$ext =strrchr($file['name'],'.');
+// die($ext);.png
+// $savePath ='./upload/'.$file['name'];
+$savePath='./upload/'.date('YmdHis-').mt_rand(1000,9999).$ext;
+// die($savePath);//./upload/20171012164341-7330.png
+// ./upload/404.png
+
+if(move_uploaded_file($file['tmp_name'], $savePath)){
+	echo $file['name']."上传成功";
+}else{
+	echo $file['name']."移动发生错误";
+}
+```
+
+### 文件上传相关问题
+- 万一两个用户上传的文件名字一样怎么办?
+
 
