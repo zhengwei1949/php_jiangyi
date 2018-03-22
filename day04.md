@@ -46,6 +46,7 @@
 - float - decimal 对精度要求高用decimal,对精度要求低用float
 - varchar 存比较长的字符串，需指定长度
 - char
+    + 手机号用char类型存，因为int（21亿）  占据4个字节的空间，存储有符号数（可存储负数）,手机号超过了范围存不下
 - text 指定较长的字符串，无需指定字符串长度
 - datetime 年月日时分秒
 - date 年月日
