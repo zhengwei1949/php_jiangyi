@@ -79,7 +79,7 @@ if(!0.0){
 
 ## define、const及defined函数(12:49)
 - 常量不是$开头
-- 推荐常量用大写
+- 推荐常量用大写(以后大家见到大写的，不以$开头的，默认可以认为是常量)
 
 ```php
 define('PI',3.14159);
@@ -232,6 +232,7 @@ echo '<br>';
 echo rand(1,100);
 echo '<br>';
 echo mt_rand(1,100);//mt_rand()是更好地随机数生成器，因为它跟rand()相比播下了一个更好地随机数种子；而且性能上比rand()快4倍，mt_getrandmax()所表示的数值范围也更大
+echo mt_rand(1000,9999);
 ```
 
 
@@ -249,6 +250,7 @@ echo mt_rand(1,100);//mt_rand()是更好地随机数生成器，因为它跟rand
 header('content-type:text/html;charset=utf8;');
 echo date('Y-m-d H:i:s');// 相当于js中的(new Date()).toString() Y-m-d H:i:s ---> 年-月-日 时:分:秒 参考：http://www.php.net/manual/zh/function.date.php 通过手册上的说明，大家可以明白为什么Y,H必须要是大写的
 echo '<br>';
+//重点是YmdHis，中间的是分割符，为了好看而加上去的
 echo date('Y年m月d日 H时i分s秒');
 echo '<br>';
 echo '时间戳'.time();//和js的区别：js的时间戳（Date.now()）位数是14位，单位是微秒，php的时间戳单位是秒

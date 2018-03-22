@@ -696,4 +696,5 @@ if(move_uploaded_file($file['tmp_name'], $savePath)){
 ### 文件上传相关问题
 - 万一两个用户上传的文件名字一样怎么办?
 
-
+## 晚上的任务
+- 把sql语句复习一下
