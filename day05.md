@@ -68,6 +68,14 @@ header('refresh:5;url=http://www.baidu.com');
 - location.assign
 - location.href
 
+## php结合js端的跳转
+
+```php
+//day06用得上类似的代码
+echo '<script>location.href = "http://www.baidu.com"</script>;
+
+```
+
 ## GET与POST的区别
 - GET不安全，且长度有限定
 - POST更安全，可用于传输大的数据、上传文件

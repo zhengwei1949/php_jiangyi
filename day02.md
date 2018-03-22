@@ -424,3 +424,63 @@ print_r($arr);
 ?>
 ```
 
+## 扩展 - html混写 - 为day06的例子做准备
+
+```php
+<?php 
+$data = [
+    [
+        "id"=>1,
+        "cid"=>1,
+        "name"=>"ipad mini",
+        "price"=>1000
+    ],
+    [
+        "id"=>2,
+        "cid"=>2,
+        "name"=>"macbook",
+        "price"=>9000
+    ],
+    [
+        "id"=>3,
+        "cid"=>1,
+        "name"=>"ipad 2",
+        "price"=>4000
+    ],
+    [
+        "id"=>4,
+        "cid"=>2,
+        "name"=>"iphone 6s",
+        "price"=>3600
+    ]
+];
+// print_r($data);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <table border="1" rules="all" width="60%" align="center" cellpadding="8">
+		<caption><h2>电子设备</h2></caption>
+		<tr>
+			<th>编号</th>
+			<th>名称</th>
+			<th>价格</th>
+        </tr>
+        <?php for($i=0;$i<count($data);$i++){?>
+		<tr align="center">
+			<td><?php echo $data[$i]['id']?></td>
+			<td><?php echo $data[$i]['name']?></td>
+			<td><?php echo $data[$i]['price']?></td>
+        </tr>
+        <?php }?>
+	</table>
+</body>
+</html>
+```
