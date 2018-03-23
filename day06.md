@@ -753,6 +753,78 @@ while($row = mysql_fetch_assoc($results)){
 ```
 
 ### 第六步 修改学生信息
+- 修改其实和添加的逻辑有点类似，所以，我们直接拷贝添加的php代码过来
+
+```php
+
+<?php 
+include "./connect.php";
+// var_dump($link);
+$sql = 'select * from my_class';
+$results = mysql_query($sql);
+// var_dump($results);
+// var_dump(mysql_error());
+mysql_num_rows($results) > 0 or die('没有查询到数据');
+$data = [];
+while($row = mysql_fetch_assoc($results)){
+	$data[] = $row;
+}
+// print_r($data);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<!-- 录入学生的学号、姓名、年龄、性别，班级、手机号、电子照片等。 -->
+	<form action="update.php?stu_id=1" method="POST" enctype="multipart/form-data">
+		<!-- <input type="hidden" name="stu_id" value="1"> -->
+		<table width="60%" cellpadding="8" border="1" rules="all" align="center">
+			<caption><h2>修改学生信息</h2></caption>
+			<tr>
+				<th>学生姓名</th>
+				<td><input type="text" name="stu_name" id="" value="欧阳帅帅"></td>
+			</tr>
+			<tr>
+				<th>年龄</th>
+				<td><input type="text" name="age" id="" value="23"></td>
+			</tr>
+			<tr>
+				<th>性别</th>
+				<td>
+					<input type="radio" name="sex" id="" value="男" checked>男
+					<input type="radio" name="sex" id="" value="女" >女
+					<input type="radio" name="sex" id="" value="保密" >保密
+				</td>
+			</tr>
+			<tr>
+				<th>班级</th>
+				<td>
+                    <select name="class_id" id="">
+						<?php for($i=0;$i<count($data);$i++){?>						
+                        	<option value="<?php echo $data[$i]['class_id']?>"><?php echo $data[$i]['class_name'] ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr>
+				<th>手机号</th>
+				<td><input type="text" name="tel" id="" value="13812345678"></td>
+			</tr>
+			<tr>
+				<th></th>
+				<td><input type="submit" value="修改"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>	
+
+
+```
+
+
 - 思考
 用户操作逻辑：点击修改链接跳转到修改页面，进一步思考：为什么不同的修改可以知道要修改哪一个？ --> 通过id
 
@@ -760,9 +832,445 @@ while($row = mysql_fetch_assoc($results)){
 	<td><a href="./edit.php?stu_id=<?php echo $data[$i]['stu_id'] ?>">修改</a> || 删除</td>
 ```
 
+add.php要做的事情是获取当前的id,然后去数据库当中查询到对应的数据
+
+```php
+
+<?php 
+include "./connect.php";
+// var_dump($link);
+$sql = 'select * from my_class';
+$results = mysql_query($sql);
+// var_dump($results);
+// var_dump(mysql_error());
+mysql_num_rows($results) > 0 or die('没有查询到数据');
+$data = [];
+while($row = mysql_fetch_assoc($results)){
+	$data[] = $row;
+}
+// print_r($data);
+
+// print_r($_GET);
+if(!empty($_GET)){
+	$stu_id = $_GET['stu_id'];
+}else{
+	$stu_id = 1;
+}
+// echo $stu_id;
+$sql1 = 'select * from my_stu where stu_id='.$stu_id;
+$results1 = mysql_query($sql1);
+mysql_num_rows($results1) > 0 or die('暂无数据');
+$data1 = mysql_fetch_assoc($results1);
+print_r($data1);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<!-- 录入学生的学号、姓名、年龄、性别，班级、手机号、电子照片等。 -->
+	<form action="" method="POST" enctype="multipart/form-data">
+		<table width="60%" cellpadding="8" border="1" rules="all" align="center">
+			<caption><h2>修改学生信息</h2></caption>
+			<tr>
+				<th>学生姓名</th>
+				<td><input type="text" name="stu_name" id="" value="欧阳帅帅"></td>
+			</tr>
+			<tr>
+				<th>年龄</th>
+				<td><input type="text" name="age" id="" value="23"></td>
+			</tr>
+			<tr>
+				<th>性别</th>
+				<td>
+					<input type="radio" name="sex" id="" value="男" checked>男
+					<input type="radio" name="sex" id="" value="女" >女
+					<input type="radio" name="sex" id="" value="保密" >保密
+				</td>
+			</tr>
+			<tr>
+				<th>班级</th>
+				<td>
+                    <select name="class_id" id="">
+						<?php for($i=0;$i<count($data);$i++){?>						
+                        	<option value="<?php echo $data[$i]['class_id']?>"><?php echo $data[$i]['class_name'] ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr>
+				<th>手机号</th>
+				<td><input type="text" name="tel" id="" value="13812345678"></td>
+			</tr>
+			<tr>
+				<th></th>
+				<td><input type="submit" value="修改"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>	
+
+```
+
+接下来去渲染到页面当中
+
+```php
+
+<?php 
+include "./connect.php";
+// var_dump($link);
+$sql = 'select * from my_class';
+$results = mysql_query($sql);
+// var_dump($results);
+// var_dump(mysql_error());
+mysql_num_rows($results) > 0 or die('没有查询到数据');
+$data = [];
+while($row = mysql_fetch_assoc($results)){
+	$data[] = $row;
+}
+// print_r($data);
+
+// print_r($_GET);
+if(!empty($_GET)){
+	$stu_id = $_GET['stu_id'];
+}else{
+	$stu_id = 1;
+}
+// echo $stu_id;
+$sql1 = 'select * from my_stu where stu_id='.$stu_id;
+$results1 = mysql_query($sql1);
+mysql_num_rows($results1) > 0 or die('暂无数据');
+$data1 = mysql_fetch_assoc($results1);
+print_r($data1);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<!-- 录入学生的学号、姓名、年龄、性别，班级、手机号、电子照片等。 -->
+	<form action="" method="POST" enctype="multipart/form-data">
+		<table width="60%" cellpadding="8" border="1" rules="all" align="center">
+			<caption><h2>修改学生信息</h2></caption>
+			<tr>
+				<th>学生姓名</th>
+				<td><input type="text" name="stu_name" id="" value="<?php echo $data1['stu_name'];?>"></td>
+			</tr>
+			<tr>
+				<th>年龄</th>
+				<td><input type="text" name="age" id="" value="<?php echo $data1['age'];?>"></td>
+			</tr>
+			<tr>
+				<th>性别</th>
+				<td>
+					<input type="radio" name="sex" id="" value="男" <?php echo $data1['sex']=='男'?'checked':'';?>>男
+					<input type="radio" name="sex" id="" value="女" <?php echo $data1['sex']=='女'?'checked':'';?>>女
+					<input type="radio" name="sex" id="" value="保密" <?php echo $data1['sex']=='保密'?'checked':'';?>>保密
+				</td>
+			</tr>
+			<tr>
+				<th>班级</th>
+				<td>
+                    <select name="class_id" id="">
+						<?php for($i=0;$i<count($data);$i++){?>						
+                        	<option value="<?php echo $data[$i]['class_id']?>" <?php echo $data1['class_id']==$data[$i]['class_id']?'selected':'';?>><?php echo $data[$i]['class_name'] ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr>
+				<th>手机号</th>
+				<td><input type="text" name="tel" id="" value="<?php echo $data1['tel'];?>"></td>
+			</tr>
+			<tr>
+				<th></th>
+				<td><input type="submit" value="修改"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>	
+```
+
+接下来，处理用户修改提交的数据，添加update.php
+
+```php
+//edit.php
+
+<?php 
+include "./connect.php";
+// var_dump($link);
+$sql = 'select * from my_class';
+$results = mysql_query($sql);
+// var_dump($results);
+// var_dump(mysql_error());
+mysql_num_rows($results) > 0 or die('没有查询到数据');
+$data = [];
+while($row = mysql_fetch_assoc($results)){
+	$data[] = $row;
+}
+// print_r($data);
+
+// print_r($_GET);
+if(!empty($_GET)){
+	$stu_id = $_GET['stu_id'];
+}else{
+	$stu_id = 1;
+}
+// echo $stu_id;
+$sql1 = 'select * from my_stu where stu_id='.$stu_id;
+$results1 = mysql_query($sql1);
+mysql_num_rows($results1) > 0 or die('暂无数据');
+$data1 = mysql_fetch_assoc($results1);
+print_r($data1);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<!-- 录入学生的学号、姓名、年龄、性别，班级、手机号、电子照片等。 -->
+	<form action="update.php" method="POST" enctype="multipart/form-data">
+		<input type="hidden" name="stu_id" value="<?php echo $data1['stu_id'];?>">
+		<table width="60%" cellpadding="8" border="1" rules="all" align="center">
+			<caption><h2>修改学生信息</h2></caption>
+			<tr>
+				<th>学生姓名</th>
+				<td><input type="text" name="stu_name" id="" value="<?php echo $data1['stu_name'];?>"></td>
+			</tr>
+			<tr>
+				<th>年龄</th>
+				<td><input type="text" name="age" id="" value="<?php echo $data1['age'];?>"></td>
+			</tr>
+			<tr>
+				<th>性别</th>
+				<td>
+					<input type="radio" name="sex" id="" value="男" <?php echo $data1['sex']=='男'?'checked':'';?>>男
+					<input type="radio" name="sex" id="" value="女" <?php echo $data1['sex']=='女'?'checked':'';?>>女
+					<input type="radio" name="sex" id="" value="保密" <?php echo $data1['sex']=='保密'?'checked':'';?>>保密
+				</td>
+			</tr>
+			<tr>
+				<th>班级</th>
+				<td>
+                    <select name="class_id" id="">
+						<?php for($i=0;$i<count($data);$i++){?>						
+                        	<option value="<?php echo $data[$i]['class_id']?>" <?php echo $data1['class_id']==$data[$i]['class_id']?'selected':'';?>><?php echo $data[$i]['class_name'] ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr>
+				<th>手机号</th>
+				<td><input type="text" name="tel" id="" value="<?php echo $data1['tel'];?>"></td>
+			</tr>
+			<tr>
+				<th></th>
+				<td><input type="submit" value="修改"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>	
+
+
+```
+
+```php
+//update.php
+<?php 
+header('content-type:text/html;charset=utf8');
+// print_r($_POST);
+$stu_id = $_POST['stu_id'];
+$stu_name = $_POST['stu_name'];
+$age = $_POST['age'];
+$sex = $_POST['class_id'];
+$tel = $_POST['tel'];
+
+?>
+```
+
+构建update SQL语句
+
+```php
+<?php 
+header('content-type:text/html;charset=utf8');
+include './connect.php';
+// print_r($_POST);
+$stu_id = $_POST['stu_id'];
+$stu_name = $_POST['stu_name'];
+$age = $_POST['age'];
+$sex = $_POST['class_id'];
+$tel = $_POST['tel'];
+
+$sql = "update my_stu set stu_name = '$stu_name',age=$age,sex='$sex',tel = '$tel' where stu_id = $stu_id";
+echo $sql;
+$results = mysql_query($sql);
+// var_dump($results);
+if($results == true){
+    echo '成功';
+}else{
+    echo '失败';
+}
+?>
+```
+
+跳转到首页
+```php
+<?php 
+header('content-type:text/html;charset=utf8');
+include './connect.php';
+// print_r($_POST);
+$stu_id = $_POST['stu_id'];
+$stu_name = $_POST['stu_name'];
+$age = $_POST['age'];
+$sex = $_POST['class_id'];
+$tel = $_POST['tel'];
+
+$sql = "update my_stu set stu_name = '$stu_name',age=$age,sex='$sex',tel = '$tel' where stu_id = $stu_id";
+echo $sql;
+$results = mysql_query($sql);
+// var_dump($results);
+if($results == true){
+    // echo '成功';
+    header('location:./index.php');
+}else{
+    echo '失败';
+}
+?>
+```
 
 ### 第七步 学生信息详情
+修改index.php
 
+```html
+<td><a href="./detail.php?stu_id=<?php echo $data[$i]['stu_id'] ?>"><?php echo $data[$i]['stu_name'] ?></a></td>
+```
 
-### 优化代码
-- 提取跳转相关的函数
+在detail.php中接收数据
+
+```php
+<?php 
+print_r($_GET);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>首页</title>
+</head>
+<body>
+	<table width="50%" border="1" rules="all" cellpadding="8" align="center">
+		<caption><h2>欧阳帅帅的信息</h2></caption>
+		<tr>
+			<th>学号</th>
+			<td>1</td>
+		</tr>
+		<tr>
+			<th>班级</th>
+			<td>北京前端1</td>
+		</tr>
+		<tr>
+			<th>学生照片</th>
+			<td><img src="./upload/1.png" alt="" width='200'></td>
+		</tr>
+
+	</table>
+</body>
+</html>
+```
+
+接下来，我们通过id去查询数据，渲染到页面上来
+
+```php
+<?php 
+// print_r($_GET);
+include './connect.php';
+if(empty($_GET)){
+	$stu_id = 1;
+}else{
+	$stu_id = $_GET['stu_id'];
+}
+$sql = 'select * from my_stu where stu_id = '.$stu_id;
+$results = mysql_query($sql);
+$data = mysql_fetch_assoc($results);
+print_r($data);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>首页</title>
+</head>
+<body>
+	<table width="50%" border="1" rules="all" cellpadding="8" align="center">
+		<caption><h2><?php echo $data['stu_name'] ?>的信息</h2></caption>
+		<tr>
+			<th>学号</th>
+			<td><?php echo $data['stu_id'] ?></td>
+		</tr>
+		<tr>
+			<th>班级</th>
+			<td><?php echo $data['class_id'] ?></td>
+		</tr>
+		<tr>
+			<th>学生照片</th>
+			<td><img src="<?php echo $data['pics'] ?>" alt="" width='200'></td>
+		</tr>
+
+	</table>
+</body>
+</html>
+```
+
+根据class_id去查询对应的班级
+
+```php
+<?php 
+// print_r($_GET);
+include './connect.php';
+if(empty($_GET)){
+	$stu_id = 1;
+}else{
+	$stu_id = $_GET['stu_id'];
+}
+$sql = 'select * from my_stu where stu_id = '.$stu_id;
+$results = mysql_query($sql);
+$data = mysql_fetch_assoc($results);
+print_r($data);
+$class_id = $data['class_id'];
+$sql1 = 'select * from my_class where class_id='.$class_id;
+$results1 = mysql_query($sql1);
+$data1 = mysql_fetch_assoc($results1);
+print_r($data1);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>首页</title>
+</head>
+<body>
+	<table width="50%" border="1" rules="all" cellpadding="8" align="center">
+		<caption><h2><?php echo $data['stu_name'] ?>的信息</h2></caption>
+		<tr>
+			<th>学号</th>
+			<td><?php echo $data['stu_id'] ?></td>
+		</tr>
+		<tr>
+			<th>班级</th>
+			<td><?php echo $data1['class_name'] ?></td>
+		</tr>
+		<tr>
+			<th>学生照片</th>
+			<td><img src="<?php echo $data['pics'] ?>" alt="" width='200'></td>
+		</tr>
+
+	</table>
+</body>
+</html>
+```
