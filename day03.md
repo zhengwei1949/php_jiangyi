@@ -5,11 +5,14 @@
     + 单引号中套双引号变量并不会被解析
 - 双引号规则
     + 双引号中使用变量会被解析
+    + 双引号中可以解析识别转义字符` \ $ \r \n \t`
     + 双引号中套双引号要转义
     + 双引号中套单引号也会解析
     + 为了防止变量解析错误，可以在变量外面套一个花括号
 - 如何使用
     + 如果想解析变量，最外层一定要用双引号
+
+
 
 ```php
 <?php 
@@ -22,6 +25,24 @@ echo $str3;
 ?>
 ```
 
+```php
+<?php
+// ====== 单引号 ======
+echo 'hello\nworld';
+// => `hello\nworld`
+echo 'I\'m a better man';
+// => `I'm a better man`
+echo 'OS path: C:\\Windows';
+// => `OS path: C:\Windows`
+
+// ====== 双引号 ======
+echo "hello\nworld";
+// => `hello
+// world`
+$name = 'zce';
+echo "hello $name";
+// => `hello zce`
+```
 
 - heredoc
     + 好处就是可以换行，保持要打印的字符的结构
@@ -54,6 +75,8 @@ echo mb_strlen($str,'utf-8');
 ```
 
 ## 字符串函数（上）(25:33)
+- http://php.net/manual/zh/ref.strings.php
+- http://www.w3school.com.cn/php/php_string.asp
 - printf
     + %s
     + %d
@@ -270,6 +293,28 @@ print_r($arr);
 - 数组的类型
     + 索引数组 --> js中的数组 
     + 关联数组 --> js中的不包含方法的对象(只有属性的对象) 
+
+```php
+<?php
+// 定义一个索引数组
+$arr = array(1, 2, 3, 4, 5);
+var_dump($arr);
+
+// PHP 5.4 以后定义的方式可以用 `[]`
+$arr2 = [1, 2, 3, 4, 5];
+var_dump($arr2);
+```
+
+```php
+<?php
+// 注意：键只能是`integer`或者`string`
+$arr = array('key1' => 'value1', 'key2' => 'value2');
+var_dump($arr);
+
+// PHP 5.4 以后定义的方式可以用 `[]`
+$arr2 = ['key1' => 'value1', 'key2' => 'value2'];
+var_dump($arr2);
+```
 
 
 ```php

@@ -505,6 +505,9 @@ print_r($_POST);
 header('content-type:text/html;charset=utf8');
 print_r($_POST);
 // print_r($_FILES);
+if(empty($_FILES)){
+    die('非法登录');
+}
 $file = $_FILES['upload'];
 //1. 判断文件上传是否有错误
 if($file['error'] !=0){
@@ -1274,3 +1277,13 @@ print_r($data1);
 </body>
 </html>
 ```
+
+- todo
+	+ 可以搞一个定时器效果，让跳转用户体验更好一点
+	+ 封装是为了让我们重复的代码只写一份。在封装的时候需要考虑的事情是，这个所封装的方法是有可能在各个地方被调用的，所以要考虑什么是变的，将变的东西放到参数中。
+
+## 从详情页大家可以体会到
+- 动态网站的本质，是什么造成了同一个文件内容显示不一样 ---> 参数不同
+
+## 练习
+- 安装edit this cookie chrome 插件

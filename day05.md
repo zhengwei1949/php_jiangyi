@@ -121,6 +121,8 @@ Microsoft Internet Information Server(IIS)
 
 ```
 
+![](./GET和POST的区别.png)
+
 -----> 关于预定义变量，除了$_GET、$_POST,还有很多：
 
 ## 预定义变量(超全局变量)

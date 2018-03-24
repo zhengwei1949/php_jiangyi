@@ -4,6 +4,9 @@
 ## web基本概念(web服务器、软件架构、ip地址、域名)(15:33)
 - 静态资源与动态资源
 - 服务器端与客户端(浏览器端)
+
+![](./服务器搞笑图.png)
+
 - ip地址与域名
     + 如果我们想算圆的面积，可能用得到3.14159....,但是我们没有人记得住，所以，我们会这样做：var pi = 3.14159..,这样定义好之后，下次，我们直接用pi这个变量即可
     + 域名也类似一个变量，我们买了域名，然后让域名和我们的ip地址关联好之后，以后，直接可以通过域名进行访问
@@ -11,6 +14,8 @@
     + ipconfig
     + 127.0.0.1
     + 192.168开头为当前局域网的地址
+    + 怎么理解二级域名
+    + 大家可以去www.zhujiwu.com  或者www.aliyun.com来看一下一个域名多少钱
 
 ## web基本概念(dns、端口)(11:25)
 - dns的作用
@@ -20,12 +25,16 @@
 - hosts修改
     + 尝试访问itcast.net
     + 在hosts中添加一行：127.0.0.1 itcast.net，再次访问itcast.net查看效果
+    + host这个文件是病毒或者木马最喜爱修改的东西，所以360等修复软件最先检查的也是这个文件。大家在配置的过程中，尽量把杀毒软件退出
 - 理解：
     + 实际上找到一台电脑用的是ip地址
     + ip地址太难记了，所以需要让ip地址对应一个域名，因为域名更好记
     + 输入的虽然是域名，但是在找服务器之前，会先通过dns,hosts之类的找到对应的ip是多少
 - 端口
     + 通过商场的例子来理解端口
+
+
+![](./multiple-network.png)
 ## web基本概念(url、web程序的访问流程)(6:39)
 - url的组成
     + 这块可以看一下百度的网址
@@ -33,6 +42,20 @@
 - web程序的访问流程
     + 静态：请求 ---> 找到对应的静态资源 --> 响应
     + 动态：请求 ---> php从数据库中找到对应的数据 --> 与对应的模板组成最终的页面 --> 响应
+
+
+### 请求与响应的访问流程
+
+![](./http-req-res.png)
+
+- 用户打开浏览器
+- 地址栏输入我们需要访问的网站网址（URL）
+- 浏览器通过 DNS 服务器 获取即将访问的网站 IP 地址
+- 浏览器发起一个对这个 IP地址的 请求
+- 服务端监听指定的 端口 的服务器软件接收到这个请求，进行相应的处理
+- 服务端将处理完的结果返回给客户端浏览器（响应）
+- 浏览器将服务端返回的结果呈现到界面上
+
 
 ## phpStudy安装(不放)
     + 东八区的配置(不设置的话，会有警告提示信息，同时时间会差8小时)
@@ -60,7 +83,6 @@ echo date('Y-m-d H:i:s');
 <VirtualHost *:80>
     DocumentRoot "C:\Users\zhengwei\Desktop\server\www.ali.com"
     ServerName www.ali.com
-    ServerAlias ali.com
   <Directory "C:\Users\zhengwei\Desktop\server\www.ali.com">
 +      Options indexes FollowSymLinks ExecCGI
 +      DirectoryIndex index.html index.php
@@ -139,7 +161,7 @@ $host = 'localhost';//数据库服务器主机名
 $user = 'root';//数据库服务器用户名
 $password = 'root';//密码
 //与数据库建立连接，成功返回资源类型数据，失败返回FALSE,类似和别人聊天先要打电话把电话打通建立连接
-$link = mysql_connect($host,$user,$password); 
+$link = mysql_connect($host,$user); 
 var_dump($link);   
 ```
 
@@ -194,9 +216,7 @@ e)$a100
 3、dns怎么理解?
 4、url的格式是怎么样的?
 5、变量的类型有哪些?
-6、自己再配置两个虚拟主机：www.test.com oa.test.com(后面的课程用得上)
-
-## 课程反馈
+6、自己再配置两个虚拟主机：www.test.com oa.test.com,www.zhangsan.com,www.lisi.com,alishow.com,www.alishow.com(后面的课程用得上)
 
 ## 练习参考答案
 1、$a,$a1,$a100
@@ -205,3 +225,8 @@ e)$a100
 4、参考讲义
 5、参考讲义
 6、参考讲义
+
+## 课程总结及反馈
+- 今天学了哪些概念
+- 今天学了哪些配置
+- 今天学了哪些代码
