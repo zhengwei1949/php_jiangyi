@@ -1,3 +1,15 @@
+## 重难点
+- php中的+号就是加号，没有拼接的意思
+- js中的if...else if...在php中变成了if...elseif...
+- die函数的作用
+- sleep函数的作用
+- or的短路操作用途
+- 函数作用域和全局作用域互相不能通信 
+- 要记的函数 
+    1. mt_rand
+    2. date
+    3. time
+
 ## 类型自动转换与强制类型转(14:39)
 
 ### 注意事项
@@ -31,13 +43,13 @@ echo '<br>';
 ### 强制类型转换
 
 ```php
-var_dump((int)('aaa12345'));
+var_dump((int)('aaa12345'));//类似parseInt
 echo '<br>';
 var_dump((int)('123aaa'));
 echo '<br>';
 var_dump((int)('5.53string'));
 echo '<br>';
-var_dump((float)('5.53string'));
+var_dump((float)('5.53string'));//类似parseFloat
 echo '<br>';
 var_dump((int)(true));
 echo '<br>';
@@ -45,7 +57,7 @@ var_dump((int)(false));
 echo '<br>';
 var_dump((int)(null));
 ```
-a)转换为false的情况：
+a)转换为false的情况：(大家有没有感觉其实和empty函数类似????)
 - 整型0
 - 浮点型0.0
 - 字符串’0’
@@ -93,12 +105,14 @@ var_dump(defined('PI'));
 
 ## 运算符(13:27)
 - 错误抑制符
-    + 可以用来抑制warnning、notice级别的错误
+    + js如果出错了，会在控制台报错，普通用户看不到
+    + php如果出错了，直接在客户端浏览器报错，普通用户看到了会不友好，所以如果不是特严重的可以抑制掉的
+    + 可以用来抑制warnning、notice级别的错误，致命错误也不能抑制
 
 ```php
 $a = 8;
 $b = 0;
-echo @($a / $b);
+echo @($a / $b);//要学会看报错信息
 ```
 
 - 拼接运算符
@@ -123,19 +137,33 @@ var_dump(true and false);
 - die函数的作用 - 中止代码继续往后操作(了解：还有一个和它一样的叫exit）
 
 ```
-$a = mysql_query("use ".$conf['db']);
-if(!$a == true){
-    die('数据库连接失败');
-}
+<?php
+header('content-type:text/html;charset=utf8');
+$host = 'localhost';//数据库服务器主机名
+$user = 'root';//数据库服务器用户名
+$password = 'root';//密码
+//与数据库建立连接，成功返回资源类型数据，失败返回FALSE,类似和别人聊天先要打电话把电话打通建立连接
+$link = @mysql_connect($host,$user); 
+$db = 'ceshi1';
+@mysql_query('use '.$db);
+?>
 ```
 
 - 上面写法太麻烦了，可以利用php的or的特点(如果前面是true,后面半句不会执行) ---> 短路机制
 
 ```php
-mysql_query('use '.$conf['db']) or die('数据库连接失败');
+<?php
+header('content-type:text/html;charset=utf8');
+$host = 'localhost';//数据库服务器主机名
+$user = 'root';//数据库服务器用户名
+$password = 'root';//密码
+//与数据库建立连接，成功返回资源类型数据，失败返回FALSE,类似和别人聊天先要打电话把电话打通建立连接
+$link = @mysql_connect($host,$user); 
+$db = 'ceshi1';
+@mysql_query('use '.$db) or die('数据库连接失败');
+?>
 ```
 
-简写如下代码：
 
 ```php
 if(!defined('PI')){
@@ -143,25 +171,13 @@ if(!defined('PI')){
 }
 ```
 
+简写如下：
+
 ```php
 //短路运算：如果前面的值是true,则后面的表达式不执行，相当于被抛弃
 //如果前面的是false,则后面的表达式执行
 defined('PI') or define('PI',3.14159);
 ```
-
-容易犯错的地方：
-
-```php
-$a = 200 || 300;
-echo $a;//结果是1，分析：200||300就是true||true,结果是true --> 打印true结果是1
-```
-
-```php
-$a = 200 or 300;
-echo $a;//大家思考结果是多少?
-```
-
-如何理解：http://php.net/manual/zh/language.operators.preced
 
 ## 循环 - 不放
 - sleep()
@@ -231,10 +247,9 @@ echo floor(5.5);
 echo '<br>';
 echo rand(1,100);
 echo '<br>';
-echo mt_rand(1,100);//mt_rand()是更好地随机数生成器，因为它跟rand()相比播下了一个更好地随机数种子；而且性能上比rand()快4倍，mt_getrandmax()所表示的数值范围也更大
+echo mt_rand(1,100);//mt_rand()是更好地随机数生成器，因为它跟rand()相比播下了一个更好地随机数种子；而且性能上比rand()更好
 echo mt_rand(1000,9999);
 ```
-
 
 - max 类似js中的Math.max
 - min 类似js中的Math.min
@@ -265,14 +280,13 @@ echo date('Y-m-d H:i:s',strtotime('+1 day'));//明天当前这个点的时间是
 time()
 ```
 
-### strtotime的用法
+### strtotime的用法(了解)
 
 ```php
 echo strtotime('now'),"\n";
 echo strtotime("10 September 2000"),"\n";
 echo strtotime("+1 day"),"\n";
 echo strtotime("+1 week"),"\n";
-echo strtotime("+1 week 2 days 4 hours 2 seconds"),"\n";
 echo strtotime("next Thursday"),"\n";
 echo strtotime("last Monday"),"\n";
 ```
@@ -287,6 +301,9 @@ echo strtotime("last Monday"),"\n";
 - include和require的区别：include如果引入一个不存在的文件，会有警告信息，但不影响代码往下执行，require如果引入一个不存在的文件，直接产生致命的错误
 
 ### 如何取舍
+
+大部分情况下是没啥区别的，大家随便用就可以了
+
 比如是系统配置，缺少了，网站不让运行，自然用require，如果是某一段统计程序，少了，对网站只是少统计人数罢了，不是必须要的，可以用include 
 
 如果你当前的文件是定义了几个变量，而不加once，因为这样会重复定义，浪费性能
@@ -311,7 +328,7 @@ echo strtotime("last Monday"),"\n";
 - 至于是否采用一次载入（once）这种方式取决于被载入的文件
 
 
-### 路径问题
+### 路径问题(对非php专业的我们来说了解即可，基本上用不上)
 - 相对路径存在的问题：(ceshi目录用来说明这个问题的)
     + http://www.ali.com/ceshi/b/b.php访问这个路径是没问题的
     + 但是访问http://www.ali.com/ceshi/ceshi.php就会出问题
