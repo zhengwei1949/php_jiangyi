@@ -440,6 +440,12 @@ echo date('Y-m-d H:i:s');
 4. 在vhosts.ini中添加如下两行
 
 ```
+Options indexes FollowSymLinks ExecCGI
+DirectoryIndex index.html index.php
+```
+
+
+```
 <VirtualHost *:80>
     DocumentRoot "C:\Users\zhengwei\Desktop\server\www.ali.com"
     ServerName www.ali.com
@@ -3615,4 +3621,4 @@ if(!empty($_GET)){
 // echo $stu_id;
 $sql1 = 'select * from my_stu where stu_id='.$stu_id;
 $results1 = mysql_query($sql1);
-mysql_num_rows($results1) > 0 or die('暂�
+mysql_num_rows($results1) > 0 or die('暂��
