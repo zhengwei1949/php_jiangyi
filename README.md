@@ -444,14 +444,31 @@ Options indexes FollowSymLinks ExecCGI
 DirectoryIndex index.html index.php
 ```
 
+```
+<VirtualHost *:80>
+    DocumentRoot "C:\Users\zhengwei\Desktop\server\www.test.com"
+    ServerName www.test.com
+    ServerAlias 
+  <Directory "C:\Users\zhengwei\Desktop\server\www.test.com">
+      Options FollowSymLinks ExecCGI
+      AllowOverride All
+      Order allow,deny
+      Allow from all
+     Require all granted
+  </Directory>
+</VirtualHost>
+```
+
+修改为：
 
 ```
 <VirtualHost *:80>
     DocumentRoot "C:\Users\zhengwei\Desktop\server\www.ali.com"
     ServerName www.ali.com
   <Directory "C:\Users\zhengwei\Desktop\server\www.ali.com">
-+      Options indexes FollowSymLinks ExecCGI
-+      DirectoryIndex index.html index.php
+-     Options FollowSymLinks ExecCGI
++     Options indexes FollowSymLinks ExecCGI
++     DirectoryIndex index.html index.php
       AllowOverride All
       Order allow,deny
       Allow from all
@@ -565,6 +582,8 @@ echo $a;
 - 布尔型(不区分大小写 TRUE True TRue TrUe)
 - 字符串
 - null(不区分大小写 Null NULL null) php中只有一种空
+- 数组
+- 对象(我们的课程并不涉及到php的对象，了解即可)
 - 资源类型
     + 把数据库连接代码抄写一遍，提前熟悉一下整个过程
 
@@ -789,6 +808,7 @@ echo @($a / $b);//要学会看报错信息
 ```
 
 - 拼接运算符
+    + 拼接运算符决定了php的数组只能通过中括号的方式进行访问，不能通过点的形式进行访问
 
 ## 条件判断(21:05) - 不放
 - js中的if...else if...在php中变成了if...elseif...
@@ -1548,8 +1568,6 @@ $arr2 = ['key1' => 'value1', 'key2' => 'value2'];
 var_dump($arr2);
 ```
 
-- 数组的注意事项：
-    + 关联类型的数组，键名必须加引号
 
 
 ```php
@@ -3593,32 +3611,4 @@ print_r($data1);
 </html>	
 ```
 
-接下来，处理用户修改提交的数据，添加update.php
-
-```php
-//edit.php
-
-<?php 
-include "./connect.php";
-// var_dump($link);
-$sql = 'select * from my_class';
-$results = mysql_query($sql);
-// var_dump($results);
-// var_dump(mysql_error());
-mysql_num_rows($results) > 0 or die('没有查询到数据');
-$data = [];
-while($row = mysql_fetch_assoc($results)){
-	$data[] = $row;
-}
-// print_r($data);
-
-// print_r($_GET);
-if(!empty($_GET)){
-	$stu_id = $_GET['stu_id'];
-}else{
-	$stu_id = 1;
-}
-// echo $stu_id;
-$sql1 = 'select * from my_stu where stu_id='.$stu_id;
-$results1 = mysql_query($sql1);
-mysql_num_rows($results1) > 0 or die('暂��
+接下来，处理用户修改�

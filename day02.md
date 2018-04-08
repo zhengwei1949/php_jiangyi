@@ -184,7 +184,7 @@ defined('PI') or define('PI',3.14159);
 
 ```php
 $a = 100;
-sleep(5);
+sleep(5);//一般用于模拟网络延迟效果，网速比较慢的效果
 echo $a;
 ```
 

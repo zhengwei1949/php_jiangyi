@@ -2,7 +2,7 @@
 - 我们在day05的时候，超全局变量有提到$_COOKIE,$_SESSION，今天咱们就来学习这二个东西
 
 ## 1-HTTP协议介绍.avi
-- 打开network --> header进行查看
+- 打开network --> header进行查看(熟悉了解network,从这里可以看出来是GET、POST，状态码是多少)
 
 ![](./持久连接.png)
 
@@ -30,7 +30,7 @@
 | Accept-Encoding | 可以接受的压缩编码                   |
 | Cookie          | 客户端本地的小票信息                  |
 
-##### 请求体
+##### 请求体(这个一定要了解，后面ajax会提及到)
 
 这次请求客户端想要发送给服务端的数据正文，一般在 GET 请求时很少用到，因为 GET 请求主观上都是去“拿东西”。
 
@@ -447,11 +447,6 @@ session_start();
 session_destroy();
 header('refresh:1;url=./index.php');
 ```
-
-
-
-
-
 
 
 

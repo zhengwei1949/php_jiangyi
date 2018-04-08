@@ -12,6 +12,9 @@
     + a链接
     + 直接在地址栏输入
 
+### GET和POST的区别
+- GET可以在历史记录中查看，如果用这种方式制作登录不安全，必须要用POST
+
 ### 分页思路
 
 ```
@@ -619,6 +622,7 @@ $_FILES["file"]["error"] - 由文件上传导致的错误代码
 3. 通过$_FILES['myFileName']['error']判断出错信息
 4. 判断文件是否是HTTP POST上传的文件
     + is_uploaded_file(临时文件路径$_FILES['myFileName']['tmp_name'])
+        1. 如何理解：http://www.w3school.com.cn/php/func_filesystem_is_uploaded_file.asp
     + 返回true(合法的POST文件)
 5. 把文件从tmp临时目录中移动到网站永久路径
     + move_uploaded_file(临时路径$_FILES['myFileName']['tmp_name']永久路径)
@@ -706,6 +710,8 @@ if(move_uploaded_file($file['tmp_name'], $savePath)){
 	echo $file['name']."移动发生错误";
 }
 ```
+
+这块其实写得比较安全且完善，可以参考一下阿里百秀那块代码，可以写简单的平时练习的话
 
 ### 文件上传相关问题
 - 万一两个用户上传的文件名字一样怎么办?
